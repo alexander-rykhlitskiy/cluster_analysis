@@ -1,3 +1,4 @@
+require 'benchmark'
 require 'RMagick'
 require 'pry'
 require_relative 'support'
@@ -8,7 +9,6 @@ include Magick
 spoons_image = ImageList.new('spoons.jpg')
 
 pixels = spoons_image.view(0, 0, spoons_image.columns, spoons_image.rows)
-
 pixels = AreaAllocator.new(pixels).allocate
 
 def clusterize_pixel_groups(grouped_pixels)
@@ -34,6 +34,7 @@ clusterize_pixel_groups(grouped_pixels).each do |cluster_number, pixel_group|
   end
 end
 
-
 pixels.sync
+spoons_image.write('clusterized_spoons.jpg')
 spoons_image.display
+exit

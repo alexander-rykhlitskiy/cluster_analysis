@@ -1,3 +1,5 @@
+require_relative 'two_neighbor_pixels'
+
 class AreaAllocator
   def initialize(pixels)
     @pixels = pixels
@@ -18,15 +20,19 @@ class AreaAllocator
     end
     # @areas_array.group_by_any_included!
 
+    set_true_area_number_to_pixels
+    @pixels
+  end
+
+  private
+
+  def set_true_area_number_to_pixels
     @pixels.each do |pix|
       if !pix.area_number.nil?
         pix.area_number = @areas_array.index { |x| x.include?(pix.area_number) }
       end
     end
-    @pixels
   end
-
-  private
 
   def compare_pixel_to_neighbors(pix, x, y)
     neighbors = TwoNeighborPixels.new(@pixels[x-1][y], @pixels[x][y-1])
@@ -47,43 +53,11 @@ end
 
 class AreasArray < Array
   def add_areas(areas)
-    target_group = self.find { |areas_group| !(areas_group & areas).empty? }
-
-    if target_group.nil?
+    target_group_index = self.index { |areas_group| !(areas_group & areas).empty? }
+    if target_group_index.nil?
       self << areas
     else
-      self.delete(target_group)
-      self << (target_group | areas)
+      self[target_group_index] = (self[target_group_index] | areas)
     end
-  end
-end
-
-class TwoNeighborPixels
-  def initialize(left_neighbor, top_neighbor)
-    @left_neighbor, @top_neighbor = left_neighbor, top_neighbor
-  end
-
-  def areas_numbers
-    [@left_neighbor.area_number, @top_neighbor.area_number]
-  end
-
-  def no_one_in_area?
-    @left_neighbor.area_number.nil? && @top_neighbor.area_number.nil?
-  end
-
-  def only_one_in_area?
-    @left_neighbor.area_number.nil? != @top_neighbor.area_number.nil?
-  end
-
-  def belongs_to_one_area?
-    !no_one_in_area? && (@left_neighbor.area_number == @top_neighbor.area_number)
-  end
-
-  def belongs_to_different_areas?
-    !no_one_in_area? && !only_one_in_area? && (@left_neighbor.area_number != @top_neighbor.area_number)
-  end
-
-  def area_number_of_one
-    @left_neighbor.area_number || @top_neighbor.area_number
   end
 end
