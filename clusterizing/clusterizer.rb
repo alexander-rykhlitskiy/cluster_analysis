@@ -8,23 +8,31 @@ class Clusterizer
     @vectors = @vectors.sort_by { |vec| vec.distance_from_start }
   end
 
-  def clusterize(clusters_number, draw_chart: false)
+  def clusterize(clusters_number, draw_chart: false, chart_name: nil)
     set_centers(clusters_number)
     last_vectors, current_vectors = [], @centers.map(&:vectors)
 
     counter = 0
     while(last_vectors != current_vectors) do
-      print("#{counter += 1} ")
+      counter += 1
       last_vectors = current_vectors.map { |vector| vector.dup }
       reset_clusters
 
       current_vectors = @centers.map(&:vectors)
       reset_centers
     end
+    puts "Vectors were clustered in #{counter} cycles."
+
     reset_clusters
 
     clusters = @centers.map(&:vectors)
-    draw_chart(clusters) if draw_chart
+    draw_chart(clusters, chart_name) if draw_chart
+
+    clusters.map do |cluster|
+      cluster.map do |vector|
+        vector.properties
+      end
+    end
   end
 
   private
@@ -53,14 +61,14 @@ class Clusterizer
     @centers = @centers.map(&:get_mass_center)
   end
 
-  def draw_chart(clusters)
+  def draw_chart(clusters, chart_name=nil)
     g = Gruff::Scatter.new
     g.title = 'Shapes (square | perimeter)'
 
     clusters.each.with_index do |cluster, index|
       g.data(index.to_s, cluster.map { |vector| vector[0] }, cluster.map { |vector| vector[1] })
     end
-    g.write('shapes.png')
+    g.write("#{chart_name}_chart.png")
   end
 
 end

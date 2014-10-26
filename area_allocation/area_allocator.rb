@@ -1,4 +1,6 @@
 require_relative 'two_neighbor_pixels'
+require_relative 'shape'
+require_relative 'support'
 
 class AreaAllocator
   def initialize(view_pixels)
@@ -14,12 +16,11 @@ class AreaAllocator
         # pix.red = pix.green = pix.blue = 0
         # pix.color_label = 0
       else
-        pix.red = pix.green = pix.blue = MAX_INT
+        # pix.red = pix.green = pix.blue = MAX_INT
         pix.color_label = 1
         compare_pixel_to_neighbors(pix, x, y)
       end
     end
-    # @areas_array.group_by_any_included!
 
     set_true_area_number_to_pixels
     @view_pixels
@@ -36,7 +37,7 @@ class AreaAllocator
   end
 
   def compare_pixel_to_neighbors(pix, x, y)
-    neighbors = TwoNeighborPixels.new(@view_pixels[x-1][y], @view_pixels[x][y-1])
+    neighbors = TwoNeighborPixels.new(@view_pixels[y][x-1], @view_pixels[y-1][x])
 
     if neighbors.no_one_in_area?
       @n_area_counter += 1
