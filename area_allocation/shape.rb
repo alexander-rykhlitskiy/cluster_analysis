@@ -1,7 +1,7 @@
 require_relative 'paintable'
 class Shape
   include Paintable
-  VECTOR_PROPERTIES = [:square, :perimeter]
+  VECTOR_PROPERTIES = [:square, :perimeter, :compactness]
 
   attr_reader :pixels
 
