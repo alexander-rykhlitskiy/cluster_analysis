@@ -48,6 +48,6 @@ class Shape
   end
 
   def to_yaml
-    VECTOR_PROPERTIES.map { |prop| [prop, public_send(prop)] }
+    VECTOR_PROPERTIES.map { |prop| [prop, public_send(prop)] }.to_h
   end
 end
