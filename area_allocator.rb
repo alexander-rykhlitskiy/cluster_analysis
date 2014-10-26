@@ -1,17 +1,18 @@
 require_relative 'two_neighbor_pixels'
 
 class AreaAllocator
-  def initialize(pixels)
-    @pixels = pixels
+  def initialize(view_pixels)
+    @view_pixels = view_pixels
     @n_area_counter = 0
     @areas_array = AreasArray.new
   end
 
   def allocate
-    @pixels.each do |pix, x, y|
+    @view_pixels.each do |pix, x, y|
+      pix.x, pix.y = x, y
       if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT / 2)
-        pix.red = pix.green = pix.blue = 0
-        pix.color_label = 0
+        # pix.red = pix.green = pix.blue = 0
+        # pix.color_label = 0
       else
         pix.red = pix.green = pix.blue = MAX_INT
         pix.color_label = 1
@@ -21,13 +22,13 @@ class AreaAllocator
     # @areas_array.group_by_any_included!
 
     set_true_area_number_to_pixels
-    @pixels
+    @view_pixels
   end
 
   private
 
   def set_true_area_number_to_pixels
-    @pixels.each do |pix|
+    @view_pixels.each do |pix|
       if !pix.area_number.nil?
         pix.area_number = @areas_array.index { |x| x.include?(pix.area_number) }
       end
@@ -35,7 +36,7 @@ class AreaAllocator
   end
 
   def compare_pixel_to_neighbors(pix, x, y)
-    neighbors = TwoNeighborPixels.new(@pixels[x-1][y], @pixels[x][y-1])
+    neighbors = TwoNeighborPixels.new(@view_pixels[x-1][y], @view_pixels[x][y-1])
 
     if neighbors.no_one_in_area?
       @n_area_counter += 1
