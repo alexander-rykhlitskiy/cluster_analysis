@@ -56,12 +56,11 @@ class MainAnalyzer
   end
 
   def allocate_pixels(spoons_image)
-    @view_pixels = spoons_image.view(0, 0, spoons_image.columns, spoons_image.rows)
-    @view_pixels = AreaAllocator.new(@view_pixels).allocate
+    @pixels = AreaAllocator.new(spoons_image).allocate
 
-    grouped_pixels = @view_pixels.group_by(&:area_number)
+    grouped_pixels = @pixels.group_by(&:area_number)
     grouped_pixels.delete(nil)
-    shapes = grouped_pixels.map { |area_number, pixels| Shape.new(pixels, @view_pixels) }
+    shapes = grouped_pixels.map { |area_number, pixels| Shape.new(pixels, @pixels) }
   end
 
   def clusterize_shapes(shapes)

@@ -24,6 +24,6 @@ class TwoNeighborPixels
   end
 
   def area_number_of_one
-    @left_neighbor.area_number || @top_neighbor.area_number
+    @top_neighbor.area_number || @left_neighbor.area_number
   end
 end

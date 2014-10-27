@@ -3,14 +3,16 @@ require_relative 'shape'
 require_relative 'support'
 
 class AreaAllocator
-  def initialize(view_pixels)
-    @view_pixels = view_pixels
+  def initialize(image)
+    @image = image
+    @pixels = []
+    @view_pixels = image.view(0, 0, image.columns, image.rows)
     @n_area_counter = 0
     @areas_array = AreasArray.new
   end
 
   def allocate
-    @view_pixels.each do |pix, x, y|
+    @image.each_pixel do |pix, x, y|
       pix.x, pix.y = x, y
       if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT / 2)
         # pix.red = pix.green = pix.blue = 0
@@ -20,16 +22,17 @@ class AreaAllocator
         pix.color_label = 1
         compare_pixel_to_neighbors(pix, x, y)
       end
+      pixels << pix
     end
 
     set_true_area_number_to_pixels
-    @view_pixels
+    @pixels
   end
 
   private
 
   def set_true_area_number_to_pixels
-    @view_pixels.each do |pix|
+    @pixels.each do |pix|
       if !pix.area_number.nil?
         pix.area_number = @areas_array.index { |x| x.include?(pix.area_number) }
       end
