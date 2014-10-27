@@ -14,13 +14,13 @@ class MainAnalyzer
     @spoons_image = ImageList.new(@image_file)
     shapes = allocate_pixels(@spoons_image)
     clusterize_shapes(shapes)
+    # annotate_shapes(@spoons_image, shapes)
   end
 
   def output
     @view_pixels.sync
     @spoons_image.write(@output_file_name + '.jpg')
     ImageList.new(@output_file_name + '.jpg', @output_file_name + '_chart.png').display
-    # @spoons_image.display
   end
 
   private

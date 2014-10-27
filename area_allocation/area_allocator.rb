@@ -55,11 +55,20 @@ end
 
 class AreasArray < Array
   def add_areas(areas)
-    target_group_index = self.index { |areas_group| !(areas_group & areas).empty? }
-    if target_group_index.nil?
+    target_group_indexes = self.each_index.select do |areas_group_index|
+      areas_group = self[areas_group_index]
+      common_elements = (areas_group & areas)
+      !common_elements.empty?
+    end
+    if target_group_indexes.empty?
       self << areas
     else
-      self[target_group_index] = (self[target_group_index] | areas)
+      if target_group_indexes.count == 1
+        self[target_group_indexes.first] = (self[target_group_indexes.first] | areas)
+      else
+        self[target_group_indexes.first] = (self[target_group_indexes.first] | self[target_group_indexes.last])
+        self.delete_at(target_group_indexes.last)
+      end
     end
   end
 end
