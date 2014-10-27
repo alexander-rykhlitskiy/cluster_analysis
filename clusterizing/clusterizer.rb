@@ -25,7 +25,7 @@ class Clusterizer
 
     reset_clusters
 
-    clusters = @centers.map(&:vectors)
+    clusters = @centers.map(&:vectors).reject(&:empty?)
     draw_chart(clusters, chart_name) if draw_chart
 
     clusters.map do |cluster|
@@ -63,7 +63,7 @@ class Clusterizer
 
   def draw_chart(clusters, chart_name=nil)
     g = Gruff::Scatter.new
-    g.title = 'Shapes (square | perimeter)'
+    g.title = 'Vectors'
 
     clusters.each.with_index do |cluster, index|
       g.data(index.to_s, cluster.map { |vector| vector[0] }, cluster.map { |vector| vector[1] })
