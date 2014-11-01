@@ -1,1 +1,1 @@
-ruby analyze.rb spoons.jpg output 2
+ruby main.rb spoons.jpg output 2

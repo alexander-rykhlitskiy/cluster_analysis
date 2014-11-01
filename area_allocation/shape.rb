@@ -9,12 +9,16 @@ class Shape
     @pixels, @view_pixels = pixels, view_pixels
   end
 
+  def not_valid?
+    square < 30
+  end
+
   def vector_properties
     VECTOR_PROPERTIES.map { |prop| public_send(prop) }
   end
 
   def inspect
-    "#{self.class}: #{self.object_id}, square: #{square}, perimeter: #{perimeter}, compactness: #{compactness}, type: #{type}"
+    "#{self.class}: #{self.object_id}, square: #{square}, perimeter: #{perimeter}, compactness: #{compactness}"
   end
 
   def square

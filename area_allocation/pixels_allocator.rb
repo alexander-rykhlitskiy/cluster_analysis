@@ -1,8 +1,6 @@
-require_relative 'two_neighbor_pixels'
-require_relative 'shape'
-require_relative 'support'
+class PixelsAllocator
+  GRAY_COEFFICIENT = 0.6
 
-class AreaAllocator
   def initialize(view_pixels)
     @view_pixels = view_pixels
     @n_area_counter = 0
@@ -12,7 +10,7 @@ class AreaAllocator
   def allocate
     @view_pixels.each do |pix, x, y|
       pix.x, pix.y = x, y
-      if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT / 2)
+      if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT * GRAY_COEFFICIENT)
         # pix.red = pix.green = pix.blue = 0
         # pix.color_label = 0
       else

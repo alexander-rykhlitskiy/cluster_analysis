@@ -1,4 +1,4 @@
-class Center < Vector
+class Clusterizing::Center < Clusterizing::Vector
   attr_accessor :vectors
   def initialize(properties, vectors=[])
     @properties, @vectors = properties, vectors
@@ -16,7 +16,7 @@ class Center < Vector
         prop_sum = @vectors.map { |vector| vector[prop_index] }.reduce(:+).to_i
         prop_mean = prop_sum / @vectors.count
       end
-      Center.new(mean_properties)
+      Clusterizing::Center.new(mean_properties)
     end
   end
 end

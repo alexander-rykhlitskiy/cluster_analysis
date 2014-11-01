@@ -1,10 +1,18 @@
-class Vector
+class Clusterizing::Vector
   extend Forwardable
   attr_reader :properties
-  def_delegators :@properties, :[]
+  def_delegators :@properties, :[], :length
 
   def initialize(properties)
     @properties = properties
+  end
+
+  def self.write_vectors_to_dat_file(vectors)
+    File.open('vectors.dat', 'w') do |file|
+      vectors.each do |vector|
+        file.write(vector.properties.join(' ') + "\n")
+      end
+    end
   end
 
   def distance_to(vector)
@@ -20,7 +28,7 @@ class Vector
   end
 
   def to_center
-    Center.new(properties)
+    Clusterizing::Center.new(properties)
   end
 
 end

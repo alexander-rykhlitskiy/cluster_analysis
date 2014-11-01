@@ -1,0 +1,2 @@
+splot "vectors.dat" pt 7 ps 5 with points
+pause -1
