@@ -1,11 +1,13 @@
-require 'gruff'
-
 module Clusterizing
 
   require_relative 'vector'
   require_relative 'center'
+  require_relative 'clusters_drawer'
 
   class Clusterizer
+    extend Forwardable
+    def_delegators :@drawer, :draw_chart
+
     def initialize(properties_vectors)
       @vectors = properties_vectors.map { |properties_vector| Vector.new(properties_vector) }
       @vectors = @vectors.sort_by { |vec| vec.distance_from_start }
@@ -29,6 +31,7 @@ module Clusterizing
       reset_clusters
 
       @clusters = @centers.map(&:vectors).reject(&:empty?)
+      @drawer = ClustersDrawer.new(@clusters)
 
       @clusters.map do |cluster|
         cluster.map do |vector|
@@ -37,26 +40,7 @@ module Clusterizing
       end
     end
 
-    def draw_chart(chart_name=nil)
-      draw_gruff_chart(chart_name)
-      draw_gnuplot_chart
-    end
-
     private
-
-    def draw_gruff_chart(chart_name=nil)
-      g = Gruff::Scatter.new
-      g.title = 'Vectors of properties'
-
-      @clusters.each.with_index do |cluster, index|
-        g.data(index.to_s, cluster.map { |vector| vector[0] }, cluster.map { |vector| vector[1] })
-      end
-      g.write("#{chart_name}_chart.png")
-    end
-
-    def draw_gnuplot_chart
-      Vector.write_vectors_to_dat_file(@vectors)
-    end
 
     # ToDo: better choice of initial cluster centers
     def set_centers(clusters_number)

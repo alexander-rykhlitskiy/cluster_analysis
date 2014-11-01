@@ -12,7 +12,10 @@ include Magick
 class MainAnalyzer
   def analyze
     check_input_parameters
-    @spoons_image = ImageList.new(@image_file).gaussian_blur(0, @blur_coefficient)
+    @spoons_image = ImageList.new(@image_file)
+    unless @blur_coefficient.nil?
+      @spoons_image = @spoons_image.gaussian_blur(0, @blur_coefficient)
+    end
 
     @allocator = ShapesAllocator.new(@spoons_image)
     shapes = @allocator.allocate(@gray_limit_coefficient)
@@ -54,16 +57,20 @@ class MainAnalyzer
     @clusters_number = @clusters_number.to_i
 
     @blur_coefficient = ARGV[3]
-    if @blur_coefficient.to_f.to_s != @blur_coefficient
-      error('fourth argument must be a float number')
+    unless @blur_coefficient.nil?
+      if @blur_coefficient.to_f.to_s != @blur_coefficient
+        error('fourth argument must be a float number')
+      end
+      @blur_coefficient = @blur_coefficient.to_f
     end
-    @blur_coefficient = @blur_coefficient.to_f
 
     @gray_limit_coefficient = ARGV[4]
-    if @gray_limit_coefficient.to_f.to_s != @gray_limit_coefficient
-      error('fifth argument must be a float number')
+    unless @gray_limit_coefficient.nil?
+      if @gray_limit_coefficient.to_f.to_s != @gray_limit_coefficient
+        error('fifth argument must be a float number')
+      end
+      @gray_limit_coefficient = @gray_limit_coefficient.to_f
     end
-    @gray_limit_coefficient = @gray_limit_coefficient.to_f
   end
 
 end
