@@ -1,5 +1,5 @@
 class PixelsAllocator
-  GRAY_COEFFICIENT = 0.6
+  GRAY_LIMIT_COEFFICIENT = 0.6
 
   def initialize(view_pixels)
     @view_pixels = view_pixels
@@ -7,10 +7,10 @@ class PixelsAllocator
     @areas_array = AreasArray.new
   end
 
-  def allocate
+  def allocate(gray_limit_coefficient)
     @view_pixels.each do |pix, x, y|
       pix.x, pix.y = x, y
-      if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT * GRAY_COEFFICIENT)
+      if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT * (gray_limit_coefficient || GRAY_LIMIT_COEFFICIENT))
         # pix.red = pix.green = pix.blue = 0
         # pix.color_label = 0
       else

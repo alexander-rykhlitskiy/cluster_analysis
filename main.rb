@@ -15,7 +15,7 @@ class MainAnalyzer
     @spoons_image = ImageList.new(@image_file).gaussian_blur(0, @blur_coefficient)
 
     @allocator = ShapesAllocator.new(@spoons_image)
-    shapes = @allocator.allocate
+    shapes = @allocator.allocate(@gray_limit_coefficient)
 
     shapes_clusterizer = ShapesClusterizer.new(shapes)
     shapes_clusterizer.clusterize(@clusters_number, @output_file_name)
@@ -58,6 +58,12 @@ class MainAnalyzer
       error('fourth argument must be a float number')
     end
     @blur_coefficient = @blur_coefficient.to_f
+
+    @gray_limit_coefficient = ARGV[4]
+    if @gray_limit_coefficient.to_f.to_s != @gray_limit_coefficient
+      error('fifth argument must be a float number')
+    end
+    @gray_limit_coefficient = @gray_limit_coefficient.to_f
   end
 
 end
