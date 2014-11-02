@@ -14,7 +14,7 @@ module Clusterizing
     end
 
     def clusterize(clusters_number)
-      set_centers(clusters_number)
+      set_initial_centers(clusters_number)
       last_vectors, current_vectors = [], @centers.map(&:vectors)
 
       counter = 0
@@ -43,10 +43,10 @@ module Clusterizing
     private
 
     # ToDo: better choice of initial cluster centers
-    def set_centers(clusters_number)
+    def set_initial_centers(clusters_number)
       initial_center = Center.new(Array.new(@vectors.first.properties.count), @vectors)
 
-      @centers = [initial_center.get_mass_center]
+      @centers = [initial_center.get_area_mass_center]
 
       return if clusters_number < 2
       @centers += @vectors.take(1).map(&:to_center)
@@ -63,7 +63,7 @@ module Clusterizing
     end
 
     def reset_centers
-      @centers = @centers.map(&:get_mass_center)
+      @centers = @centers.map(&:get_area_mass_center)
     end
   end
 end

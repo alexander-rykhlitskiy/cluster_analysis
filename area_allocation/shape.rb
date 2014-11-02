@@ -44,6 +44,7 @@ class Shape
           @perimeter += 1
         end
     end
+    # @perimeter = @perimeter * 4
     @perimeter
   end
 
@@ -51,7 +52,19 @@ class Shape
     (perimeter ** 2) / square
   end
 
-  def to_yaml
+  def to_h
     VECTOR_PROPERTIES.map { |prop| [prop, public_send(prop)] }.to_h
+  end
+
+  class << self
+    FILE_NAME = 'shapes.yml'
+
+    def shapes_to_yaml(shapes)
+      File.write(FILE_NAME, shapes.map(&:to_h).to_yaml)
+    end
+
+    def load_yaml
+      YAML.load(File.read(FILE_NAME))
+    end
   end
 end

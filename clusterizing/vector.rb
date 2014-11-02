@@ -7,14 +7,6 @@ class Clusterizing::Vector
     @properties = properties
   end
 
-  def self.write_vectors_to_dat_file(vectors)
-    File.open('vectors.dat', 'w') do |file|
-      vectors.each do |vector|
-        file.write(vector.properties.join(' ') + "\n")
-      end
-    end
-  end
-
   def distance_to(vector)
     raise 'wrong vector arity' if vector.properties.count != properties.count
 
@@ -31,4 +23,11 @@ class Clusterizing::Vector
     Clusterizing::Center.new(properties)
   end
 
+  def self.write_vectors_to_dat_file(vectors)
+    File.open('vectors.dat', 'w') do |file|
+      vectors.each do |vector|
+        file.write(vector.properties.join(' ') + "\n")
+      end
+    end
+  end
 end

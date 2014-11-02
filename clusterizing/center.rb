@@ -8,7 +8,7 @@ class Clusterizing::Center < Clusterizing::Vector
     @vectors << vector
   end
 
-  def get_mass_center
+  def get_area_mass_center
     if @vectors.count.zero?
       self
     else
