@@ -26,7 +26,7 @@ module Clusterizing
         current_vectors = @centers.map(&:vectors)
         reset_centers
       end
-      puts "Vectors were clustered in #{counter} cycles."
+      # puts "Vectors were clustered in #{counter} cycles."
 
       reset_clusters
 

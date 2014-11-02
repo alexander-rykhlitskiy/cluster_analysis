@@ -8,9 +8,9 @@ class ShapesAllocator
     @image = image
   end
 
-  def allocate(gray_limit_coefficient)
+  def allocate(black_limit_coefficient)
     @view_pixels = @image.view(0, 0, @image.columns, @image.rows)
-    @view_pixels = PixelsAllocator.new(@view_pixels).allocate(gray_limit_coefficient)
+    @view_pixels = PixelsAllocator.new(@view_pixels).allocate(black_limit_coefficient)
 
     grouped_pixels = @view_pixels.group_by(&:area_number)
     grouped_pixels.delete(nil)

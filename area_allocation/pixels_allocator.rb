@@ -7,10 +7,10 @@ class PixelsAllocator
     @areas_array = AreasArray.new
   end
 
-  def allocate(gray_limit_coefficient)
+  def allocate(black_limit_coefficient)
     @view_pixels.each do |pix, x, y|
       pix.x, pix.y = x, y
-      if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT * (gray_limit_coefficient || GRAY_LIMIT_COEFFICIENT))
+      if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT * (black_limit_coefficient || GRAY_LIMIT_COEFFICIENT))
         # pix.red = pix.green = pix.blue = 0
         # pix.color_label = 0
       else
