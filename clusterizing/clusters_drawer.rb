@@ -5,8 +5,11 @@ class Clusterizing::ClustersDrawer
   end
 
   def draw_chart(chart_name)
-    draw_gruff_chart(chart_name)
-    draw_gnuplot_chart
+    properties_count = @clusters.first.first.length
+    if properties_count > 1
+      draw_gruff_chart(chart_name)
+      draw_gnuplot_chart
+    end
   end
 
   private

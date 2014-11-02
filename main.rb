@@ -17,16 +17,16 @@ class MainAnalyzer
       @spoons_image = @spoons_image.gaussian_blur(0, @blur_coefficient)
     end
 
-    @allocator = ShapesAllocator.new(@spoons_image)
-    shapes = @allocator.allocate(@gray_limit_coefficient)
+    allocator = ShapesAllocator.new(@spoons_image)
+    shapes = allocator.allocate(@gray_limit_coefficient)
 
     shapes_clusterizer = ShapesClusterizer.new(shapes)
     shapes_clusterizer.clusterize(@clusters_number, @output_file_name)
+    allocator.sync
     shapes_clusterizer.annotate_shapes(@spoons_image)
   end
 
   def output
-    @allocator.sync
     @spoons_image.write(@output_file_name + '.jpg')
     ImageList.new(@output_file_name + '.jpg', @output_file_name + '_chart.png').display
   end
@@ -74,6 +74,12 @@ class MainAnalyzer
   end
 
 end
+
+
+# binding.pry
+# shapes = Shape.load_yaml
+# clusterizer = Clusterizing::Clusterizer.new(shapes.map(&:values))
+# clusters = clusterizer.clusterize(4)
 
 analyzer = MainAnalyzer.new
 analyzer.analyze

@@ -1,16 +1,17 @@
 require_relative 'paintable'
 class Shape
   include Paintable
-  VECTOR_PROPERTIES = [:square, :perimeter, :compactness]
+  VECTOR_PROPERTIES = [:square, :perimeter, :compactness]# , :elongation]
 
-  attr_reader :pixels
+  attr_reader :pixels, *VECTOR_PROPERTIES
 
   def initialize(pixels, view_pixels)
     @pixels, @view_pixels = pixels, view_pixels
+    calculate_properties
   end
 
   def not_valid?
-    square < 30
+    @square < 30
   end
 
   def vector_properties
@@ -18,38 +19,8 @@ class Shape
   end
 
   def inspect
-    "#{self.class}: #{self.object_id}, square: #{square}, perimeter: #{perimeter}, compactness: #{compactness}"
-  end
-
-  def square
-    @pixels.count
-  end
-
-  def perimeter
-    return @perimeter if !@perimeter.nil?
-
-    @perimeter = 0
-
-    @pixels.each do |pix|
-        neighbors_coordinates = []
-        neighbors_coordinates << { x: pix.x-1, y: pix.y } if pix.x > 1
-        neighbors_coordinates << { x: pix.x, y: pix.y-1 } if pix.y > 1
-        neighbors_coordinates << { x: pix.x+1, y: pix.y } if pix.x < @view_pixels.width - 1
-        neighbors_coordinates << { x: pix.x, y: pix.y+1 } if pix.y < @view_pixels.height - 1
-
-        border = neighbors_coordinates.any? do |xy|
-          @view_pixels[xy[:y]][xy[:x]].color_label != pix.color_label
-        end
-        if border
-          @perimeter += 1
-        end
-    end
-    # @perimeter = @perimeter * 4
-    @perimeter
-  end
-
-  def compactness
-    (perimeter ** 2) / square
+    properties = VECTOR_PROPERTIES.map { |prop| "#{prop}: #{public_send(prop)}"}.join(', ')
+    "#{self.class}: #{self.object_id}, #{properties}"
   end
 
   def to_h
@@ -66,5 +37,52 @@ class Shape
     def load_yaml
       YAML.load(File.read(FILE_NAME))
     end
+  end
+
+  private
+
+  def calculate_properties
+    perimeter = 0
+    mass_x = mass_y = 0
+
+    @pixels.each do |pix|
+      mass_x += pix.x
+      mass_y += pix.y
+
+      perimeter += 1 if is_pixel_on_border?(pix)
+    end
+
+    @square = @pixels.count
+    @perimeter =  perimeter
+    @mass_center_x = (mass_x / @square)
+    @mass_center_y = (mass_y / @square)
+    @compactness = (@perimeter ** 2) / @square
+    calculate_elongation
+  end
+
+  def is_pixel_on_border?(pix)
+    neighbors_coordinates = []
+    neighbors_coordinates << { x: pix.x-1, y: pix.y } if pix.x > 1
+    neighbors_coordinates << { x: pix.x, y: pix.y-1 } if pix.y > 1
+    neighbors_coordinates << { x: pix.x+1, y: pix.y } if pix.x < @view_pixels.width - 1
+    neighbors_coordinates << { x: pix.x, y: pix.y+1 } if pix.y < @view_pixels.height - 1
+
+    neighbors_coordinates.any? do |xy|
+      @view_pixels[xy[:y]][xy[:x]].color_label != pix.color_label
+    end
+  end
+
+  def calculate_elongation
+    m20 = m02 = m11 = 0
+
+    @pixels.each do |pix|
+      m20 += (pix.x - @mass_center_x) ** 2
+      m02 += (pix.y - @mass_center_y) ** 2
+      m11 = (pix.x - @mass_center_x) * (pix.y - @mass_center_y)
+    end
+
+    sum = m20 + m02
+    sqrt = Math.sqrt(((m20 - m02) ** 2) + (4 * (m11 ** 2)))
+    @elongation = (sum + sqrt) / (sum - sqrt)
   end
 end
