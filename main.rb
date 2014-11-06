@@ -37,7 +37,7 @@ class MainAnalyzer
 
   def output
     @spoons_image.write(@output_file_name + '.jpg')
-    ImageList.new(@output_file_name + '.jpg', @output_file_name + '_chart.png').display
+    ImageList.new(@output_file_name + '.jpg', @output_file_name + '_chart.png')#.display
   end
 end
 
