@@ -61,15 +61,10 @@ class Shape
   end
 
   def is_pixel_on_border?(pix)
-    neighbors_coordinates = []
-    neighbors_coordinates << { x: pix.x-1, y: pix.y } if pix.x > 1
-    neighbors_coordinates << { x: pix.x, y: pix.y-1 } if pix.y > 1
-    neighbors_coordinates << { x: pix.x+1, y: pix.y } if pix.x < @bitmap.width - 1
-    neighbors_coordinates << { x: pix.x, y: pix.y+1 } if pix.y < @bitmap.height - 1
+    neighbor_pixels = [@bitmap[pix.x-1][pix.y], @bitmap[pix.x][pix.y-1],
+                       @bitmap[pix.x+1][pix.y], @bitmap[pix.x][pix.y+1]]
 
-    neighbors_coordinates.any? do |xy|
-      @bitmap[xy[:x]][xy[:y]].color_label != pix.color_label
-    end
+    neighbor_pixels.any? { |neighb| neighb.color_label != pix.color_label }
   end
 
   def calculate_elongation

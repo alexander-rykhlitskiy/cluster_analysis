@@ -8,9 +8,10 @@ class PixelsAllocator
   end
 
   def allocate(black_limit_coefficient)
+    compare_coefficient = MAX_INT * (black_limit_coefficient || GRAY_LIMIT_COEFFICIENT)
     @bitmap.each do |pix, x, y|
       pix.x, pix.y = x, y
-      if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT * (black_limit_coefficient || GRAY_LIMIT_COEFFICIENT))
+      if ((pix.red + pix.green + pix.blue) / 3) < compare_coefficient
         # pix.red = pix.green = pix.blue = 0
         # pix.color_label = 0
       else
@@ -28,7 +29,7 @@ class PixelsAllocator
 
   def set_true_area_number_to_pixels
     @bitmap.each do |pix|
-      if !pix.area_number.nil?
+      if pix.area_number
         pix.area_number = @areas_array.index { |x| x.include?(pix.area_number) }
       end
     end
