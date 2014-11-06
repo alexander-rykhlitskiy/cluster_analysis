@@ -68,7 +68,7 @@ class Shape
     neighbors_coordinates << { x: pix.x, y: pix.y+1 } if pix.y < @bitmap.height - 1
 
     neighbors_coordinates.any? do |xy|
-      @bitmap[xy[:y]][xy[:x]].color_label != pix.color_label
+      @bitmap[xy[:x]][xy[:y]].color_label != pix.color_label
     end
   end
 
