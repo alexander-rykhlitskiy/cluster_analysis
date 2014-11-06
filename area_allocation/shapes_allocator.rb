@@ -2,23 +2,24 @@ require_relative 'two_neighbor_pixels'
 require_relative 'shape'
 require_relative 'support'
 require_relative 'pixels_allocator'
+require_relative 'bitmap'
 
 class ShapesAllocator
   def initialize(image)
     @image = image
+    @bitmap = Bitmap.new(@image)
   end
 
   def allocate(black_limit_coefficient)
-    @view_pixels = @image.view(0, 0, @image.columns, @image.rows)
-    @view_pixels = PixelsAllocator.new(@view_pixels).allocate(black_limit_coefficient)
+    @bitmap = PixelsAllocator.new(@bitmap).allocate(black_limit_coefficient)
 
-    grouped_pixels = @view_pixels.group_by(&:area_number)
+    grouped_pixels = @bitmap.group_by(&:area_number)
     grouped_pixels.delete(nil)
-    grouped_pixels.map { |area_number, pixels| Shape.new(pixels, @view_pixels) }
+    grouped_pixels.map { |area_number, pixels| Shape.new(pixels, @bitmap) }
   end
 
   def sync
-    @view_pixels.sync
+    @bitmap.sync
   end
 
 end

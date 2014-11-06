@@ -1,14 +1,14 @@
 class PixelsAllocator
   GRAY_LIMIT_COEFFICIENT = 0.6
 
-  def initialize(view_pixels)
-    @view_pixels = view_pixels
+  def initialize(bitmap)
+    @bitmap = bitmap
     @n_area_counter = 0
     @areas_array = AreasArray.new
   end
 
   def allocate(black_limit_coefficient)
-    @view_pixels.each do |pix, x, y|
+    @bitmap.each do |pix, x, y|
       pix.x, pix.y = x, y
       if ((pix.red + pix.green + pix.blue) / 3) < (MAX_INT * (black_limit_coefficient || GRAY_LIMIT_COEFFICIENT))
         # pix.red = pix.green = pix.blue = 0
@@ -21,13 +21,13 @@ class PixelsAllocator
     end
 
     set_true_area_number_to_pixels
-    @view_pixels
+    @bitmap
   end
 
   private
 
   def set_true_area_number_to_pixels
-    @view_pixels.each do |pix|
+    @bitmap.each do |pix|
       if !pix.area_number.nil?
         pix.area_number = @areas_array.index { |x| x.include?(pix.area_number) }
       end
@@ -35,7 +35,7 @@ class PixelsAllocator
   end
 
   def compare_pixel_to_neighbors(pix, x, y)
-    neighbors = TwoNeighborPixels.new(@view_pixels[y][x-1], @view_pixels[y-1][x])
+    neighbors = TwoNeighborPixels.new(@bitmap[x-1][y], @bitmap[x][y-1])
 
     if neighbors.no_one_in_area?
       @n_area_counter += 1

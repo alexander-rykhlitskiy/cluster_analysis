@@ -5,8 +5,8 @@ class Shape
 
   attr_reader :pixels, *VECTOR_PROPERTIES
 
-  def initialize(pixels, view_pixels)
-    @pixels, @view_pixels = pixels, view_pixels
+  def initialize(pixels, bitmap)
+    @pixels, @bitmap = pixels, bitmap
     calculate_properties
   end
 
@@ -64,11 +64,11 @@ class Shape
     neighbors_coordinates = []
     neighbors_coordinates << { x: pix.x-1, y: pix.y } if pix.x > 1
     neighbors_coordinates << { x: pix.x, y: pix.y-1 } if pix.y > 1
-    neighbors_coordinates << { x: pix.x+1, y: pix.y } if pix.x < @view_pixels.width - 1
-    neighbors_coordinates << { x: pix.x, y: pix.y+1 } if pix.y < @view_pixels.height - 1
+    neighbors_coordinates << { x: pix.x+1, y: pix.y } if pix.x < @bitmap.width - 1
+    neighbors_coordinates << { x: pix.x, y: pix.y+1 } if pix.y < @bitmap.height - 1
 
     neighbors_coordinates.any? do |xy|
-      @view_pixels[xy[:y]][xy[:x]].color_label != pix.color_label
+      @bitmap[xy[:y]][xy[:x]].color_label != pix.color_label
     end
   end
 

@@ -1,4 +1,4 @@
-# require 'pry'
+require 'pry'
 require 'benchmark'
 require 'RMagick'
 require_relative 'area_allocation/support'
@@ -81,10 +81,26 @@ def new_m
     @image.store_pixels(column, 0, 1, @image.rows, pixels[column])
   end
 end
+require_relative 'area_allocation/bitmap'
+def brand_new
+  bitmap = Bitmap.new(@image)
+  bitmap.each do |pix, x, y|
+    pix.x, pix.y = x, y
+    if ((pix.red + pix.green + pix.blue) / 3) < 40_000
+      pix.color_label = 0
+    else
+      pix.color_label = 1
+    end
+  end
+  bitmap.sync
+end
 
-# p 'new:'
-# p Benchmark.measure { 5.times { new_m } }
-p 'old:'
-p Benchmark.measure { 5.times { old } }
+binding.pry
+p 'new:'
+p Benchmark.measure { 5.times { new_m } }
+# p 'brand_new:'
+# p Benchmark.measure { 5.times { brand_new } }
+# p 'old:'
+# p Benchmark.measure { 5.times { old } }
 
 @image.write('output.jpg')
