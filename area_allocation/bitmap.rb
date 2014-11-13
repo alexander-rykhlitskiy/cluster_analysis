@@ -1,4 +1,5 @@
 class Bitmap
+  include Enumerable
   extend Forwardable
   def_delegators :@pixels, :[]
 
@@ -13,7 +14,7 @@ class Bitmap
     end
   end
 
-  def each(&block)
+  def each_with_xy(&block)
     @pixels.each_with_index do |pixels_column, x|
       pixels_column.each_with_index do |pix, y|
         yield(pix, x, y)
@@ -21,14 +22,10 @@ class Bitmap
     end
   end
 
-  def group_by(&block)
-    result = {}
-    self.each do |pix|
-      key = yield(pix)
-      result[key] ||= []
-      result[key] << pix
+  def each(&block)
+    @pixels.flatten.each do |pix|
+      yield pix
     end
-    result
   end
 
   def sync

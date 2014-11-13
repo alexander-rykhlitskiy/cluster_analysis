@@ -9,7 +9,7 @@ class PixelsAllocator
 
   def allocate(black_limit_coefficient)
     compare_coefficient = MAX_INT * (black_limit_coefficient || GRAY_LIMIT_COEFFICIENT)
-    @bitmap.each do |pix, x, y|
+    @bitmap.each_with_xy do |pix, x, y|
       pix.x, pix.y = x, y
       if ((pix.red + pix.green + pix.blue) / 3) < compare_coefficient
         # pix.red = pix.green = pix.blue = 0
@@ -28,7 +28,7 @@ class PixelsAllocator
   private
 
   def set_true_area_number_to_pixels
-    @bitmap.each do |pix|
+    @bitmap.each_with_xy do |pix|
       if pix.area_number
         pix.area_number = @areas_array.index { |x| x.include?(pix.area_number) }
       end
