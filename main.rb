@@ -1,6 +1,4 @@
-# require 'benchmark'
 require 'RMagick'
-# require 'pry'
 require 'gruff'
 require 'yaml'
 require 'forwardable'
@@ -19,6 +17,10 @@ class MainAnalyzer
     @black_limit_coefficient = args[:black_limit_coefficient]
     @output_file_name = args[:output_file_name] || 'output'
     @annotate_shapes = args[:annotate_shapes]
+    if args[:debug_mode]
+      require 'benchmark'
+      require 'pry'
+    end
   end
 
   def analyze

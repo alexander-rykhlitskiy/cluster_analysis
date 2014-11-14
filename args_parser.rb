@@ -32,6 +32,10 @@ class ArgsParser
       opts.on("-a", "--annotate-shapes", "Display on image info about shapes.") do |opt|
         options[:annotate_shapes] = opt
       end
+
+      opts.on("-d", "--debug-mode", "Require libraries for debugging.") do |opt|
+        options[:debug_mode] = opt
+      end
     end
 
     begin
