@@ -6,7 +6,7 @@ module Clusterizing
 
   class Clusterizer
     extend Forwardable
-    def_delegators :@drawer, :draw_chart
+    delegate draw_chart: :@drawer
 
     def initialize(initial_properties)
       @initial_properties = initial_properties

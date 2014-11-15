@@ -1,7 +1,7 @@
 class Clusterizing::Vector
   extend Forwardable
   attr_reader :properties
-  def_delegators :@properties, :[], :length
+  delegate [:[], :length] => :properties
 
   def initialize(properties)
     @properties = properties

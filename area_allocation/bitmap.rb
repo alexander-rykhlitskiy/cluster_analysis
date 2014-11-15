@@ -1,7 +1,7 @@
 class Bitmap
   include Enumerable
   extend Forwardable
-  def_delegators :@pixels, :[]
+  delegate :[] => :@pixels
 
   attr_reader :width, :height
 
