@@ -1,5 +1,5 @@
 class PixelsAllocator
-  GRAY_LIMIT_COEFFICIENT = 0.6
+  GRAY_LIMIT_COEFFICIENT = 0.7
 
   def initialize(bitmap)
     @bitmap = bitmap
@@ -11,7 +11,7 @@ class PixelsAllocator
     compare_coefficient = MAX_INT * (black_limit_coefficient || GRAY_LIMIT_COEFFICIENT)
     @bitmap.each_with_xy do |pix, x, y|
       pix.x, pix.y = x, y
-      if ((pix.red + pix.green + pix.blue) / 3) < compare_coefficient
+      if pix.intensity < compare_coefficient
         # pix.red = pix.green = pix.blue = 0
         # pix.color_label = 0
       else
